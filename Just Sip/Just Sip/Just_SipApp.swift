@@ -7,11 +7,11 @@
 
 import SwiftUI
 
-@main
+
 struct Just_SipApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            HomeView()
         }
     }
 }

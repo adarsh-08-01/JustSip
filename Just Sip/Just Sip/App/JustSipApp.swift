@@ -1,7 +1,12 @@
-//
-//  JustSipApp.swift
-//  Just Sip
-//
-//  Created by adarsh Kashyap on 08/08/26.
-//
+import SwiftUI
+import SwiftData
 
+@main
+struct JustSipApp: App {
+    var body: some Scene{
+        WindowGroup{
+            HomeView()
+        }
+        .modelContainer(for: WaterEntry.self)
+    }
+}
