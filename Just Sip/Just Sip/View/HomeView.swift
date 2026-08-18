@@ -4,7 +4,13 @@ import SwiftData
 struct HomeView: View {
     @State private var viewModel = WaterViewModel()
     @State private var showQuickAdd = false
+    @State private var showHistory = false
+    @State private var showSettings = false
+    
     @Environment(\.modelContext) private var modelContext
+    
+    @Query(sort: \WaterEntry.date)
+    private var entries: [WaterEntry]
     var body: some View {
         ZStack {
             
@@ -58,10 +64,10 @@ struct HomeView: View {
                     Text("\(viewModel.waterConsumed) ml")
                         .font(.system(size: 34, weight: .bold))
                         .foregroundStyle(.indigo)
-
-                    Text("of \(viewModel.dailyGoal) ml Goal")
+                    
+                    Text("of \(viewModel.dailyGoal.formatted()) ml Goal")
                         .font(.system(size: 15))
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Color.black.opacity(0.55))
                 }
                 .padding(.top, 10)
                 
@@ -106,32 +112,63 @@ struct HomeView: View {
                     
                     Spacer()
                     
-                    bottomButton(
-                        icon: "chart.bar",
-                        title: "History"
-                    )
+                    Button{
+                        showHistory = true
+                    } label: {
+                        VStack(spacing: 4){
+                            Image(systemName: "chart.bar")
+                                .font(.system(size: 20))
+                            
+                            Text("history")
+                                .font(.caption2)
+                        }
+                        .foregroundStyle(.indigo)
+                    }
                     
                     Spacer()
                     
-                    bottomButton(
-                        icon: "gearshape",
-                        title: "Settings"
-                    )
+                    Button {
+                        showSettings = true
+                    } label: {
+                        VStack(spacing: 4) {
+                            Image(systemName: "gearshape")
+                                .font(.system(size: 20))
+                            
+                            Text("Settings")
+                                .font(.caption2)
+                        }
+                        .foregroundStyle(.indigo)
+                    }
                 }
                 .padding(.horizontal, 30)
                 .padding(.bottom, 10)
             }
-        } .sheet(isPresented: $showQuickAdd) {
+        }
+        .task{
+            viewModel.loadTodayWater(
+                context: modelContext
+            )
+        }.onAppear {
+            viewModel.loadToday(from: entries)
+        }
+        .sheet(isPresented: $showQuickAdd) {
             QuickAddView { amount in
                 withAnimation(.easeInOut(duration: 0.8)) {
                     viewModel.addWater(
                         amount,
-                        context: modelContext
-                    )
+                        context: modelContext)
                 }
-            
             } .presentationDetents([.height(330)])
                 .presentationDragIndicator(.visible)
+        }
+        .sheet(isPresented: $showHistory){
+            HistoryView()
+        }
+        .sheet(isPresented: $showSettings) {
+            SettingsView(
+                dailyGoal: $viewModel.dailyGoal,
+                waterConsumed: $viewModel.waterConsumed
+            )
         }
     }
     //Bottom Naviagetion
