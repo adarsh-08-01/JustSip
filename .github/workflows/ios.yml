@@ -18,12 +18,18 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Show Xcode Version
+        run: xcodebuild -version
+
+      - name: List Available Simulators
+        run: xcrun simctl list devices available
+
       - name: Build Just Sip
         run: |
           xcodebuild \
             -project "Just Sip.xcodeproj" \
             -scheme "Just Sip" \
             -sdk iphonesimulator \
-            -destination 'platform=iOS Simulator,name=iPhone 16 Pro' \
+            -destination 'generic/platform=iOS Simulator' \
             CODE_SIGNING_ALLOWED=NO \
             build
