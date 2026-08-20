@@ -144,7 +144,7 @@ Smooth transition to Home
 
 ## Splash Screen
 
-![Just Sip Splash Screen](SS/SplashView.png)
+![Just Sip Splash Screen](Image/SS/SplashView.png)
 
 ## Home
 
