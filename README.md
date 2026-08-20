@@ -148,27 +148,27 @@ Smooth transition to Home
 
 ## Home
 
-![Just Sip Home](Screenshots/HomeView.png)
+![Just Sip Home](Image/SS/HomeView.png)
 
 ## Home – Water Added
 
-![Just Sip Home With Water](Screenshots/HomeView2.png)
+![Just Sip Home With Water](Image/SS/HomeView2.png)
 
 ## History
 
-![Just Sip History](Screenshots/HistoryView.png)
+![Just Sip History](Image/SS/HistoryView.png)
 
 ## Notifications
 
-![Just Sip Notifications](Screenshots/NotificationView.png)
+![Just Sip Notifications](Image/SS/NotificationView.png)
 
 ## Profile
 
-![Just Sip Profile](Screenshots/ProfileView.png)
+![Just Sip Profile](Image/SS/ProfileView.png)
 
 ## Settings
 
-![Just Sip Settings](Screenshots/SettingView.png)
+![Just Sip Settings](Image/SS/SettingView.png)
 
 ---
 
