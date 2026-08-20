@@ -19,7 +19,21 @@
 </p>
 
 ---
+## 📸 Screenshots
 
+| Splash Screen | Home Screen | Home – Water Added |
+|:---:|:---:|:---:|
+| <img src="Image/SS/SplashView.png" width="250"> | <img src="Image/SS/HomeView.png" width="250"> | <img src="Image/SS/HomeView2.png" width="250"> |
+
+| History | Notifications | Profile |
+|:---:|:---:|:---:|
+| <img src="Image/SS/HistroyView.png" width="250"> | <img src="Image/SS/NotificationView.png" width="250"> | <img src="Image/SS/ProfileView.png" width="250"> |
+
+| Settings |
+|:---:|
+| <img src="Image/SS/SettingView.png" width="250"> |
+
+---
 ## 🚀 Try Just Sip Online
 
 **Don't have an iPhone or Mac? You can still try the app.**
@@ -137,38 +151,6 @@ Crafted by Adarsh Kashyap
   ↓
 Smooth transition to Home
 ```
-
----
-
-# 🎨 Screenshots
-
-## Splash Screen
-
-![Just Sip Splash Screen](Image/SS/SplashView.png)
-
-## Home
-
-![Just Sip Home](Image/SS/HomeView.png)
-
-## Home – Water Added
-
-![Just Sip Home With Water](Image/SS/HomeView2.png)
-
-## History
-
-![Just Sip History](Image/SS/HistoryView.png)
-
-## Notifications
-
-![Just Sip Notifications](Image/SS/NotificationView.png)
-
-## Profile
-
-![Just Sip Profile](Image/SS/ProfileView.png)
-
-## Settings
-
-![Just Sip Settings](Image/SS/SettingView.png)
 
 ---
 
