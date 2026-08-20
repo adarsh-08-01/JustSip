@@ -8,13 +8,14 @@ struct SettingsView: View {
     @Binding var dailyGoal: Int
     @Binding var waterConsumed: Int
 
-    @Environment(\.modelContext) private var modelContext
+    @Environment(\.modelContext)
+    private var modelContext
 
     @AppStorage("remindersEnabled")
     private var remindersEnabled = true
 
     @AppStorage("reminderInterval")
-    private var reminderInterval = 2
+    private var reminderInterval = 30
 
     // MARK: - Reset Today's Water
 
@@ -22,26 +23,31 @@ struct SettingsView: View {
 
         let calendar = Calendar.current
 
-        let startOfToday = calendar.startOfDay(for: Date())
+        let startOfToday =
+            calendar.startOfDay(for: Date())
 
-        guard let tomorrow = calendar.date(
-            byAdding: .day,
-            value: 1,
-            to: startOfToday
-        ) else {
+        guard let tomorrow =
+                calendar.date(
+                    byAdding: .day,
+                    value: 1,
+                    to: startOfToday
+                )
+        else {
             return
         }
 
-        let descriptor = FetchDescriptor<WaterEntry>(
-            predicate: #Predicate { entry in
-                entry.date >= startOfToday &&
-                entry.date < tomorrow
-            }
-        )
+        let descriptor =
+            FetchDescriptor<WaterEntry>(
+                predicate: #Predicate { entry in
+                    entry.date >= startOfToday &&
+                    entry.date < tomorrow
+                }
+            )
 
         do {
 
-            let todayEntries = try modelContext.fetch(descriptor)
+            let todayEntries =
+                try modelContext.fetch(descriptor)
 
             for entry in todayEntries {
                 modelContext.delete(entry)
@@ -49,14 +55,15 @@ struct SettingsView: View {
 
             try modelContext.save()
 
-            // Update HomeView immediately
             waterConsumed = 0
 
-            print("Today's water reset successfully.")
+            print("✅ Today's water reset")
 
         } catch {
 
-            print("Failed to reset today's water: \(error)")
+            print(
+                "❌ Failed to reset today's water: \(error)"
+            )
         }
     }
 
@@ -72,7 +79,10 @@ struct SettingsView: View {
 
                 Section {
 
-                    Picker("Daily Goal", selection: $dailyGoal) {
+                    Picker(
+                        "Daily Goal",
+                        selection: $dailyGoal
+                    ) {
 
                         ForEach(
                             Array(
@@ -101,73 +111,109 @@ struct SettingsView: View {
                     )
                 }
 
-                // MARK: - Reminders
-
-                Section {
-
-                    Toggle(
-                        "Water Reminders",
-                        isOn: $remindersEnabled
-                    ).onChange(of: remindersEnabled){
-                        _, enabled in
-                        if enabled{
-                            Task{
-                                let granted = await NotificationManager.shared
-                                    .requestPermission()
-                                if granted{
-                                    NotificationManager.shared
-                                        .scheduleWaterReminder(intervalHours: reminderInterval)
-                                }
-                            }
-                        } else{
-                            NotificationManager.shared
-                                .cancelWaterReminders()
-                        }
-                    }
-
-                    if remindersEnabled {
-
-                        Picker(
-                            "Remind Me Every",
-                            selection: $reminderInterval
-                        ) {
-
-                            Text("30 mins")
-                                .tag(30)
-
-                            Text("1 hour")
-                                .tag(60)
-
-                            Text("2 hours")
-                                .tag(120)
-
-                            Text("3 hours")
-                                .tag(180)
-
-                            Text("4 hours")
-                                .tag(240)
-                        }.onChange(of: reminderInterval) { _, newInterval in
-                            
-                            if remindersEnabled {
-
-                                NotificationManager.shared
-                                    .scheduleWaterReminder(
-                                        intervalMinutes: reminderInterval
-                                    )
-                            }
-                        }
-                    }
-
-                } header: {
-
-                    Text("Reminders")
-
-                } footer: {
-
-                    Text(
-                        "JustSip can remind you to drink water throughout the day."
-                    )
-                }
+//                // MARK: - Reminders
+//
+//                Section {
+//
+//                    Toggle(
+//                        "Water Reminders",
+//                        isOn: $remindersEnabled
+//                    )
+//                    .onChange(of: remindersEnabled) { _, enabled in
+//
+//                        if enabled {
+//
+//                            Task {
+//
+//                                let granted =
+//                                    await NotificationManager
+//                                    .shared
+//                                    .requestPermission()
+//
+//                                if granted {
+//
+//                                    NotificationManager
+//                                        .shared
+//                                        .scheduleWaterReminder(
+//                                            intervalMinutes:
+//                                                reminderInterval
+//                                        )
+//                                }
+//
+//                            }
+//
+//                        } else {
+//
+//                            NotificationManager
+//                                .shared
+//                                .cancelReminders()
+//                        }
+//                    }
+//
+//                    if remindersEnabled {
+//
+//                        Picker(
+//                            "Remind Me Every",
+//                            selection: $reminderInterval
+//                        ) {
+//
+//                            Text("30 mins")
+//                                .tag(30)
+//
+//                            Text("1 hour")
+//                                .tag(60)
+//
+//                            Text("2 hours")
+//                                .tag(120)
+//
+//                            Text("3 hours")
+//                                .tag(180)
+//
+//                            Text("4 hours")
+//                                .tag(240)
+//                        }
+//                        .onChange(
+//                            of: reminderInterval
+//                        ) { _, newValue in
+//
+//                            if remindersEnabled {
+//
+//                                NotificationManager
+//                                    .shared
+//                                    .scheduleWaterReminder(
+//                                        intervalMinutes:
+//                                            newValue
+//                                    )
+//                            }
+//                        }
+//                    }
+//
+//                    // MARK: - Test Notification
+//
+//                    Button {
+//
+//                        NotificationManager
+//                            .shared
+//                            .scheduleTestNotification()
+//
+//                    } label: {
+//
+//                        Label(
+//                            "Test Notification (10 sec)",
+//                            systemImage: "bell.badge"
+//                        )
+//                    }
+//
+//                } header: {
+//
+//                    Text("Reminders")
+//
+//                } footer: {
+//
+//                    Text(
+//                        "JustSip can remind you to drink water throughout the day."
+//                    )
+//                }
 
                 // MARK: - Data
 
@@ -181,24 +227,28 @@ struct SettingsView: View {
 
                         Label(
                             "Reset Today's Water",
-                            systemImage: "arrow.counterclockwise"
+                            systemImage:
+                                "arrow.counterclockwise"
                         )
                     }
                 }
-
                 .alert(
                     "Reset Today's Water?",
                     isPresented: $showResetAlert
                 ) {
 
-                    Button("Cancel", role: .cancel) {
-                        // Nothing to do
+                    Button(
+                        "Cancel",
+                        role: .cancel
+                    ) {
                     }
 
-                    Button("Reset", role: .destructive) {
+                    Button(
+                        "Reset",
+                        role: .destructive
+                    ) {
 
                         resetTodayWater()
-
                     }
 
                 } message: {
@@ -233,13 +283,13 @@ struct SettingsView: View {
                     }
                 }
             }
-
             .navigationTitle("Settings")
         }
     }
 }
 
 #Preview {
+
     SettingsView(
         dailyGoal: .constant(3000),
         waterConsumed: .constant(2000)

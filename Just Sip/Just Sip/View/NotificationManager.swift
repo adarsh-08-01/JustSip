@@ -1,21 +1,26 @@
 import Foundation
 import UserNotifications
 
-final class NotificationManager {
+final class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
 
     static let shared = NotificationManager()
 
-    private init() {}
+    private override init() {
+        super.init()
 
-    // MARK: - Request Permission
+        UNUserNotificationCenter.current().delegate = self
+    }
+
+    // MARK: - Permission
 
     func requestPermission() async -> Bool {
-
         do {
             let granted = try await UNUserNotificationCenter.current()
                 .requestAuthorization(
                     options: [.alert, .sound, .badge]
                 )
+
+            print("Notification permission: \(granted)")
 
             return granted
 
@@ -25,13 +30,13 @@ final class NotificationManager {
         }
     }
 
-    // MARK: - Schedule Reminder
+    // MARK: - Water Reminder
 
     func scheduleWaterReminder(intervalMinutes: Int) {
 
         let center = UNUserNotificationCenter.current()
 
-        // Remove previous water reminders
+        // Remove previous reminder
         center.removePendingNotificationRequests(
             withIdentifiers: ["waterReminder"]
         )
@@ -43,7 +48,7 @@ final class NotificationManager {
         content.sound = .default
 
         let trigger = UNTimeIntervalNotificationTrigger(
-            timeInterval: TimeInterval(intervalMinutes * 60 * 60),
+            timeInterval: TimeInterval(intervalMinutes * 60),
             repeats: true
         )
 
@@ -55,25 +60,66 @@ final class NotificationManager {
 
         center.add(request) { error in
 
-            if let error = error {
-                print("Failed to schedule reminder: \(error)")
+            if let error {
+                print("❌ Reminder error: \(error)")
             } else {
                 print(
-                    "Water reminder scheduled every \(intervalMinutes) hour(s)."
+                    "✅ Reminder scheduled every \(intervalMinutes) minutes"
                 )
             }
         }
     }
 
-    // MARK: - Cancel Reminders
+    // MARK: - Cancel Reminder
 
-    func cancelWaterReminders() {
+    func cancelReminders() {
 
         UNUserNotificationCenter.current()
             .removePendingNotificationRequests(
                 withIdentifiers: ["waterReminder"]
             )
 
-        print("Water reminders cancelled.")
+        print("✅ Water reminders cancelled")
+    }
+
+    // MARK: - Test Notification
+
+    func scheduleTestNotification() {
+
+        let content = UNMutableNotificationContent()
+
+        content.title = "JustSip 💧"
+        content.body = "Time to drink some water!"
+        content.sound = .default
+
+        let trigger = UNTimeIntervalNotificationTrigger(
+            timeInterval: 10,
+            repeats: false
+        )
+
+        let request = UNNotificationRequest(
+            identifier: "testNotification",
+            content: content,
+            trigger: trigger
+        )
+
+        UNUserNotificationCenter.current().add(request) { error in
+
+            if let error {
+                print("❌ Test notification error: \(error)")
+            } else {
+                print("✅ Test notification scheduled for 10 seconds")
+            }
+        }
+    }
+
+    // MARK: - Show Notification While App Is Open
+
+    func userNotificationCenter(
+        _ center: UNUserNotificationCenter,
+        willPresent notification: UNNotification
+    ) async -> UNNotificationPresentationOptions {
+
+        [.banner, .sound]
     }
 }
